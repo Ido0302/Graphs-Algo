@@ -13,7 +13,7 @@ namespace ariel{
 
 class Graph{
     public:
-    vector<vector<int>> adjencyMatrix;
+    vector<vector<int>> adjacencyMatrix;
     int countOfVer;
     int countOfEdge;
     bool isDirect;

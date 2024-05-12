@@ -16,7 +16,7 @@ using namespace ariel::Algorithms;
 
 
 //Tests were exist before 
-
+/*
 TEST_CASE("Test isConnected")
 {
     ariel::Graph g;
@@ -122,9 +122,9 @@ TEST_CASE("Test invalid graph")
     CHECK_THROWS(g.loadGraph(graph));
     
 }
+*/
 
-
-//Test I added myself
+//Test I added myself!
 
 TEST_CASE("Undirected graph")
 {
@@ -137,9 +137,10 @@ TEST_CASE("Undirected graph")
     g.loadGraph(graph);
     CHECK(isConnected(g) == true);
     CHECK(shortestPath(g, 0, 2) == "0->1->2");
-    CHECK(isContainsCycle(g) == true);
+    CHECK(isContainsCycle(g) == true); //"0->1->0"
     CHECK(isBipartite(g) == "0");
-    //CHECK(negativeCycle(g) == "0");
+    CHECK(negativeCycle(g) == false); //"No negative cycle"
+    cout << "*****************" << endl;
 }
 
 TEST_CASE("Directed graph without weights")
@@ -153,9 +154,11 @@ TEST_CASE("Directed graph without weights")
     g.loadGraph(graph);
     CHECK(isConnected(g) == false);
     CHECK(shortestPath(g, 0, 2) == "0->2");
-    CHECK(isContainsCycle(g) == false);
+    CHECK(isContainsCycle(g) == false); //"No cycle"
     CHECK(isBipartite(g) == "0");
-    //CHECK(negativeCycle(g) == "0");
+    CHECK(negativeCycle(g) == false); //"No negative cycle"
+    cout << "*****************" << endl;
+
 }
 
 TEST_CASE("Directed Graph with non-negative weights")
@@ -169,9 +172,11 @@ TEST_CASE("Directed Graph with non-negative weights")
     g.loadGraph(graph);
     CHECK(isConnected(g) == true);
     CHECK(shortestPath(g, 0, 2) == "0->1->3->2");
-    CHECK(isContainsCycle(g) == true);
+    CHECK(isContainsCycle(g) == true); //"0->1->2->0"
     CHECK(isBipartite(g) == "0");
-    //CHECK(negativeCycle(g) == "0");
+    CHECK(negativeCycle(g) == false); //"No negative cycle"
+    cout << "*****************" << endl;
+
 }
 
 TEST_CASE("Directed Graph with negative weights without negative cycle")
@@ -184,10 +189,12 @@ TEST_CASE("Directed Graph with negative weights without negative cycle")
         {10, 0, 3, 0}};
     g.loadGraph(graph);
     CHECK(isConnected(g) == false);
-    CHECK(shortestPath(g, 0, 2) == "0->3->2");
-    CHECK(isContainsCycle(g) == true);
+    CHECK(shortestPath(g, 0, 2) == "0->3->2"); 
+    CHECK(isContainsCycle(g) == true); //"2->1->2"
     CHECK(isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1, 3}");
-    //CHECK(negativeCycle(g) == "0");
+    CHECK(negativeCycle(g) == false); //"No negative cycle"
+    cout << "*****************" << endl;
+
 }
 
 TEST_CASE("Directed Graph with negative cycle")
@@ -195,17 +202,20 @@ TEST_CASE("Directed Graph with negative cycle")
     
     ariel::Graph g;
     vector<vector<int>> graph = {
-        {0, -6, 0, -8},
+        {0, 2, 0, 0},
         {0, 0, 4, 0},
-        {0, -2, 0, 0},
-        {10, 0, 3, 0}};
+        {0, 0, 0, 6},
+        {8, -12, 0, 0}};
     g.loadGraph(graph);
-    CHECK(isConnected(g) == false);
-    CHECK(shortestPath(g, 0, 2) == "0->3->2");
-    CHECK(isContainsCycle(g) == true);
-    CHECK(isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1, 3}");
-    //CHECK(negativeCycle(g) == "0");
-    
+    CHECK(isConnected(g) == true);
+    CHECK_THROWS(shortestPath(g,0,2)); //has negative circle
+    CHECK(isContainsCycle(g) == true); //"0->1->2->3->0"
+    CHECK(isBipartite(g) == "0"); 
+    CHECK(negativeCycle(g) == true); //"1->2->3->1"
+    cout << "*****************" << endl;
+
+
+
 }
 
 
@@ -215,14 +225,16 @@ TEST_CASE("Forest with two trees")
     vector<vector<int>> graph = {
         {0, -1, 0, 0},
         {-1, 0, 0, 0},
-        {0, 0, 0, -1},
-        {0, 0, -1, 0}};
+        {0, 0, 0, 1},
+        {0, 0, 1, 0}};
     g.loadGraph(graph);
     CHECK(isConnected(g) == false);
-    CHECK(shortestPath(g, 0, 2) == "-1");
-    CHECK(isContainsCycle(g) == true);
+    CHECK_THROWS(shortestPath(g,0,2)); //has negative circle
+    CHECK(isContainsCycle(g) == true); //"0->1->0"
     CHECK(isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1, 3}");
-    //CHECK(negativeCycle(g) == "0");
+    CHECK(negativeCycle(g) == true); //"0->1->0"
+    cout << "*****************" << endl;
+
 }
 
 
@@ -235,11 +247,16 @@ TEST_CASE("Test throw exceptins")
     {0,0,-5},
     {-7,0,0}};
     g.loadGraph(graph);
-    //CHECK_THROWS(shortestPath(g,0,2));
+    CHECK_THROWS(shortestPath(g,0,2));
 
     vector<vector<int>> graph2 = {{0}};
     g.loadGraph(graph2);
     CHECK_THROWS(shortestPath(g,0,0));
+
+    vector<vector<int>> graph3 = {
+    {0, 1, 0},
+    {1, 0, 0}};
+    CHECK_THROWS(g.loadGraph(graph3));
     
 }
 

@@ -26,9 +26,9 @@ namespace ariel{
             if(mat.size()!=mat[i].size())
                 __throw_invalid_argument("Invalid graph: The graph is not a square matrix.");
         
-        Graph::adjencyMatrix = mat;
+        Graph::adjacencyMatrix = mat;
 
-        Graph::countOfVer = Graph::adjencyMatrix.size();
+        Graph::countOfVer = Graph::adjacencyMatrix.size();
         if(Graph::isMatrixSymetric()){
             Graph::isDirect = false;
             Graph::countOfEdge = Graph::edges()/2;
@@ -45,8 +45,8 @@ namespace ariel{
     int Graph::edges(){
         int count = 0;
         for (size_t i = 0; i < Graph::countOfVer; i++){
-            for (size_t j = 0; j < Graph::adjencyMatrix[i].size(); j++){
-                if(Graph::adjencyMatrix[i][j] != 0)
+            for (size_t j = 0; j < Graph::adjacencyMatrix[i].size(); j++){
+                if(Graph::adjacencyMatrix[i][j] != 0)
                     count++;
             }            
         }
@@ -59,7 +59,7 @@ namespace ariel{
     bool Graph::isMatrixSymetric(){
         for (size_t i = 0; i < Graph::countOfVer; i++){
             for (size_t j = i+1; j < Graph::countOfVer; j++){
-                if(Graph::adjencyMatrix[i][j] != Graph::adjencyMatrix[j][i])
+                if(Graph::adjacencyMatrix[i][j] != Graph::adjacencyMatrix[j][i])
                     return false;
             }
         }

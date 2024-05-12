@@ -38,6 +38,8 @@ namespace ariel{
 
 
         bool negativeCycle(Graph& g);
+        bool isNegativeCycle(Graph &g);
+
 
 
 

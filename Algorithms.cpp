@@ -1,5 +1,5 @@
-//ID: 207826694
-//GMAIL: didooron@gmail.com
+// ID: 207826694
+// GMAIL: didooron@gmail.com
 
 #include <iostream>
 #include <vector>
@@ -74,7 +74,7 @@ namespace ariel
                 visit.pop_back();
                 for (size_t i = 0; i < g.countOfVer; i++)
                 {
-                    if (g.adjencyMatrix[v][i] != 0 && colors[i] == white)
+                    if (g.adjacencyMatrix[v][i] != 0 && colors[i] == white)
                     {
                         colors[i] = gray;
                         visit.push_back(i);
@@ -92,15 +92,18 @@ namespace ariel
          */
         string shortestPath(Graph &g, size_t start, size_t end)
         {
-            /*if(negativeCycle)
+            //check if the graph include negative circle
+            if(negativeCycle(g))
             {
-                throw_invalid_argument("Invalid graph: The graph has negative cycle.");
-            */
-            if(start==end)
+                __throw_invalid_argument("Invalid graph: The graph has negative cycle.");
+            }
+
+            //check if the source and the destination are the same vertex 
+            if (start == end)
             {
                 __throw_invalid_argument("Invalid argumaents: 'start' can't be same 'end'.");
             }
-           
+
             string ans;
             size_t n = (size_t)g.countOfVer;
             vector<int> distance(n, infinity);
@@ -127,12 +130,12 @@ namespace ariel
             d[(size_t)s] = 0;
             for (int k = 0; k < g.countOfVer - 1; k++)
             {
-                for (size_t i = 0; i < g.adjencyMatrix.size(); i++)
+                for (size_t i = 0; i < g.adjacencyMatrix.size(); i++)
                 {
-                    for (size_t j = 0; j < g.adjencyMatrix[i].size(); j++)
+                    for (size_t j = 0; j < g.adjacencyMatrix[i].size(); j++)
                     {
-                        if (g.adjencyMatrix[i][j])
-                            relax(d, p, i, j, g.adjencyMatrix[i][j]);
+                        if (g.adjacencyMatrix[i][j])
+                            relax(d, p, i, j, g.adjacencyMatrix[i][j]);
                     }
                 }
             }
@@ -209,9 +212,9 @@ namespace ariel
          */
         bool dfs(Graph &g, vector<int> color, vector<int> path, size_t v)
         {
-            for (size_t i = 0; i < g.adjencyMatrix[v].size(); i++)
+            for (size_t i = 0; i < g.adjacencyMatrix[v].size(); i++)
             {
-                if (g.adjencyMatrix[v][i])
+                if (g.adjacencyMatrix[v][i])
                 {
                     if (color[i] == white)
                     {
@@ -220,7 +223,7 @@ namespace ariel
                         return dfs(g, color, path, i);
                     }
                     else if (color[i] == gray)
-                        printCircle(path, v, i); 
+                        printCircle(path, v, i);
                     return true;
                 }
             }
@@ -237,21 +240,20 @@ namespace ariel
             cout << ans << endl;
         }
 
-
         /**
          * The function pass on all edges in the graph and return appropriate string if the graph is bipartite
          */
         string isBipartite(Graph &g)
         {
             string ans;
-            size_t n = g.adjencyMatrix.size();
+            size_t n = g.adjacencyMatrix.size();
             vector<bool> visit(n, false); // visit is boolean vector of vertices that contain true if the vertex already visited and false if not
             vector<char> team(n, 'X');    // team is char vector of vertices that contain the team of the vertex(A or B) or X if the vertex has not team
             for (size_t i = 0; i < n; i++)
             {
                 for (size_t j = 0; j < n; j++)
                 {
-                    if (g.adjencyMatrix[i][j])
+                    if (g.adjacencyMatrix[i][j])
                     {
                         bool flag = whichGroup(i, j, visit, team); // flag symbol if we can continue in loop after call to "whichGroup"
                         if (!flag)
@@ -334,30 +336,47 @@ namespace ariel
             return ans;
         }
 
+/**
+ * The function get graph and check if exist negative circle in graph
+ * If exist return true else rerurn false
+*/
         bool negativeCycle(Graph &g)
         {
-            string ans;
-            size_t start = 0;
-            bool isNegativeCycle = false;
+            
+            bool ans = false;
+            size_t n = (size_t)g.countOfVer;
+            ans = isNegativeCycle(g);
+            return ans;
+
+        }
+
+/**
+ * The function get graph and make "Relax" algorithm on the graph n times therefore to check if the graph include negative circle.
+ * The function print appropriate messeges according what found.
+*/
+        bool isNegativeCycle(Graph &g)
+        {
+            size_t start = 1;
             size_t n = (size_t)g.countOfVer;
             vector<int> d(n, infinity);
             vector<int> path(n, -1);
-            vector<int> c(n, white);
-            bellmanFord(g, start, d, path);
-            for (size_t i = 0; i < g.adjencyMatrix.size(); i++)
+            bellmanFord(g, start, d, path); //do relax n-1 times
+
+            for (size_t i = 0; i < g.adjacencyMatrix.size(); i++) //relax another time
             {
-                for (size_t j = 0; j < g.adjencyMatrix[i].size(); j++)
+                for (size_t j = 0; j < g.adjacencyMatrix[i].size(); j++)
                 {
-                    if (g.adjencyMatrix[i][j] && d[i]!=infinity && d[i] + g.adjencyMatrix[i][j] < d[j])
+                    if (g.adjacencyMatrix[i][j] && d[i] != infinity && d[i] + g.adjacencyMatrix[i][j] < d[j]) //find a negative circle
                     {
-                        isNegativeCycle = dfs(g,c,path,i);
-                        break;
+                        cout << "It's negative cycle: " << i << "->";
+                        cout<<printPath(path,j,i)<<endl;
+                        return true;
                     }
                 }
             }
-            return isNegativeCycle;
+            cout << "No negative cycle" << endl;
+            return false;
         }
-
     };
 
 };

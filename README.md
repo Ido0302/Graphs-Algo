@@ -1,7 +1,7 @@
 # Exe1 - Graphs - (Classes and Namespaces)
 
 Graph: graph consists of 2 files: 
-1. Graph.hpp - contains the declaraiton of class "graph", the members of the class(adjency matrix, count of vertices and edges and boolean variable to define if graph is direct or not) and the declaration of the methods in class.  
+1. Graph.hpp - contains the declaraiton of class "graph", the members of the class(adjacency matrix, count of vertices and edges and boolean variable to define if graph is direct or not) and the declaration of the methods in class.  
 2. Graph.cpp - contains the implements of the methods in graph.hpp 
 The methods are:
 a. loadgraph - get matrix and update the members according the matrix.
@@ -33,3 +33,8 @@ d.1 isBipartite - The function get graph. If the graph is bipartite, return stri
     The function pass on all edges of graph, mark vertices we visited them with "visited" vector and use whichGroup(d.2) function to distribute the vertices to groups 'A' or 'B' with "team" vector.
     Finally, if were not "accidents" of vertices of edge in same group(print "0"), the function print the distribution with printGroups(d.3) function. 
     
+e.1 negativeCycle - The function get graph and check if exist negative function in the graph.
+    The function call function isNegativeCircle(e.2) which use "Bellman-Ford" algorithms and do relax n-1 times on the graph.
+    After that the function do another relax to check if one of the edge was change.
+    If changed, the function use the vertex of the edge and use vector "path" from the bellman-ford algorithm and print the circle.
+    If did not change print nessege and return false.
