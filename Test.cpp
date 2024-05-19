@@ -1,7 +1,7 @@
 //ID: 207826694
 //GMAIL: didooron@gmail.com
 
-//Clarifications:
+//Notes:
 //All graph who presented by simmetric matrix is undirected graph.
 //Connected consider as "strong" connected. It's means that possible to arrive any vertex from any vertex
 //If exists atleast two different vertices in path between vertex to himself, is a cycle. For exampla: 0->1->0 is a cycle. 0->0 isn't a cycle
@@ -13,10 +13,11 @@
 
 using namespace std;
 using namespace ariel::Algorithms;
+using namespace ariel;
 
 
 //Tests were exist before 
-/*
+
 TEST_CASE("Test isConnected")
 {
     ariel::Graph g;
@@ -122,9 +123,10 @@ TEST_CASE("Test invalid graph")
     CHECK_THROWS(g.loadGraph(graph));
     
 }
-*/
 
-//Test I added myself!
+
+
+//Tests I added myself!
 
 TEST_CASE("Undirected graph")
 {
@@ -197,6 +199,7 @@ TEST_CASE("Directed Graph with negative weights without negative cycle")
 
 }
 
+
 TEST_CASE("Directed Graph with negative cycle")
 {
     
@@ -259,5 +262,256 @@ TEST_CASE("Test throw exceptins")
     CHECK_THROWS(g.loadGraph(graph3));
     
 }
+//**********************************
+
+
+//Tests Part 2
+
+TEST_CASE("Test graph addition and subtraction")
+{
+    ariel::Graph g1;
+    vector<vector<int>> graph = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g1.loadGraph(graph);
+
+    ariel::Graph g2;
+    vector<vector<int>> weightedGraph = {
+        {0, 1, 1},
+        {1, 0, 2},
+        {1, 2, 0}};
+    g2.loadGraph(weightedGraph);
+
+    ariel::Graph g3 = g1 + g2;
+    vector<vector<int>> expectedGraph = {
+        {0, 2, 1},
+        {2, 0, 3},
+        {1, 3, 0}};
+    string ans = g3.printGraph();
+    CHECK(ans == "[0, 2, 1]\n[2, 0, 3]\n[1, 3, 0]");
+
+    g3 -= g2;
+    CHECK(g3.printGraph()==g1.printGraph());
+
+    vector<vector<int>> graph4 = {
+        {0, 1, 0, 3},
+        {1, 0, 4, 0},
+        {0, 4, 0, -2},
+        {3, 0, -2, 0}};
+    ariel::Graph g4;
+    g4.loadGraph(graph4);
+
+    vector<vector<int>> graph5 = {
+        {0, 1, -1, -5},
+        {1, 0, -3, 1},
+        {-1, -3, 0, 2},
+        {-5, 1, 2, 0}};
+    ariel::Graph g5;
+    g5.loadGraph(graph5);
+
+    vector<vector<int>> weightedGraph2 = {
+        {0, 2, -1, -2},
+        {2, 0, 1, 1},
+        {-1, 1, 0, 0},
+        {-2, 1, 0, 0}};
+    ariel::Graph g6;
+    g6.loadGraph(weightedGraph2);
+    g4+=g5;
+    CHECK(g4.printGraph()==g6.printGraph());
+
+    g5 = g6 - g4;
+    CHECK(g5.printGraph()=="[0, 0, 0, 0]\n[0, 0, 0, 0]\n[0, 0, 0, 0]\n[0, 0, 0, 0]");
+
+}
+
+TEST_CASE("Test graph multiplication")
+{
+    ariel::Graph g1;
+    vector<vector<int>> graph = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g1.loadGraph(graph);
+
+    ariel::Graph g2;
+    vector<vector<int>> weightedGraph = {
+        {0, 1, 1},
+        {1, 0, 2},
+        {1, 2, 0}};
+    g2.loadGraph(weightedGraph);
+
+    ariel::Graph g3 = g1 * g2;
+    vector<vector<int>> expectedGraph = {
+        {0, 0, 2},
+        {1, 0, 1},
+        {1, 0, 0}};
+    CHECK(g3.printGraph() == "[0, 0, 2]\n[1, 0, 1]\n[1, 0, 0]");
+
+    vector<vector<int>> graph4 = {
+        {0, 1, 0, 3},
+        {1, 0, 4, 0},
+        {0, 4, 0, -2},
+        {3, 0, -2, 0}};
+    ariel::Graph g4;
+    g4.loadGraph(graph4);
+
+    vector<vector<int>> graph5 = {
+        {0, 1, -1, -5},
+        {1, 0, -3, 1},
+        {-1, -3, 0, 2},
+        {-5, 1, 2, 0}};
+    ariel::Graph g5;
+    g5.loadGraph(graph5);
+
+    vector<vector<int>> weightedGraph2 = {
+        {0, 3, 3, 1},
+        {-4, 0, -1, 3},
+        {14, -2, 0, 4},
+        {2, 9, -3, 0}};
+    ariel::Graph g6;
+    g6.loadGraph(weightedGraph2);
+    ariel::Graph g7 = g4 * g5;
+    CHECK(g6.printGraph()==g7.printGraph());  
+}
+
+TEST_CASE("Invalid operations")
+{
+    ariel::Graph g1;
+    vector<vector<int>> graph = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g1.loadGraph(graph);
+
+    ariel::Graph g2;
+    vector<vector<int>> weightedGraph = {
+        {0, 1, 1, 1},
+        {1, 0, 2, 1},
+        {1, 2, 0, 1}};
+    CHECK_THROWS(g2.loadGraph(weightedGraph));
+
+    ariel::Graph g5;
+    vector<vector<int>> graph2 = {
+        {0, 1, 0, 0, 1},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 0},
+        {0, 0, 1, 0, 1},
+        {1, 0, 0, 1, 0}};
+    g5.loadGraph(graph2);
+    CHECK_THROWS(g5 * g1);
+    CHECK_THROWS(g1 * g2);
+
+    // Addition of two graphs with different dimensions
+    ariel::Graph g6;
+    vector<vector<int>> graph3 = {
+        {0, 1, 0, 0, 1},
+        {1, 0, 1, 0, 0},
+        {0, 1, 0, 1, 0},
+        {0, 0, 1, 0, 1},
+        {1, 0, 0, 1, 0}};
+    g6.loadGraph(graph3);
+    CHECK_THROWS(g1 + g6);
+}
+
+TEST_CASE("Another arithmetic operation on graphs"){
+    ariel::Graph g1;
+    vector<vector<int>> graph = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g1.loadGraph(graph);
+
+    ariel::Graph g2;
+    vector<vector<int>> graph2 = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g2.loadGraph(graph2);
+
+    ++g1;
+    g1++;
+    g2 *= 3;
+    CHECK(g1.printGraph()==g2.printGraph());
+
+    g1--;
+    --g2;
+    CHECK(g1.printGraph()==g2.printGraph());
+
+
+    g1*= -1;
+    -g2;
+    CHECK(g1.printGraph()==g2.printGraph());
+    
+}
+
+TEST_CASE("Test compare operation on graphs"){
+    bool result1, result2, result3;
+    ariel::Graph g1;
+    vector<vector<int>> graph = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g1.loadGraph(graph); 
+
+    //compare between matrix to herself
+    result1 = g1 == g1;
+    result2 = g1 != g1;
+    result3 = g1 <= g1;
+    CHECK(result1==true);
+    CHECK(result2==false);
+    CHECK(result3==true);
+
+    vector<vector<int>> graph2 = {
+        {0, 1, 1},
+        {1, 0, 2},
+        {1, 2, 0}};
+    ariel::Graph g2;
+    g2.loadGraph(graph2);
+
+    //comapre between 3X3 matrices
+    result1 = g1 < g2;
+    result2 = g1 > g2;
+    result3 = g1 == g2;
+    CHECK(result1==true);
+    CHECK(result2==false);
+    CHECK(result3==false);
+
+    vector<vector<int>> graph4 = {
+        {0, 1, 0, 3},
+        {1, 0, 4, 0},
+        {0, 4, 0, -2},
+        {3, 0, -2, 0}};
+    ariel::Graph g4;
+    g4.loadGraph(graph4);
+
+    vector<vector<int>> graph5 = {
+        {0, 1, -1, -5},
+        {1, 0, -3, 1},
+        {-1, -3, 0, 2},
+        {-5, 1, 2, 0}};
+    ariel::Graph g5;
+    g5.loadGraph(graph5);
+
+    //compare between 4X4 matrices
+    result1 = g5 > g4;
+    result2 = g5 >= g2;
+    result3 = g4 <= g5;
+    CHECK(result1==true);
+    CHECK(result2==true);
+    CHECK(result3==true);
+    
+    //compare between matrices wth different sizes
+    result1 = g1 < g5;
+    result2 = g2 < g4;
+    result3 = g1 >= g4;
+    CHECK(result1==true);
+    CHECK(result2==false);
+    CHECK(result3==false);
+
+
+}
+
+
 
 
