@@ -1,4 +1,4 @@
-# Exe1 - Graphs - (Classes and Namespaces)
+# Exe1 - Graphs - Classes and Namespaces
 
 Graph: graph consists of 2 files: 
 1. Graph.hpp - contains the declaraiton of class "graph", the members of the class(adjacency matrix, count of vertices and edges and boolean variable to define if graph is direct or not) and the declaration of the methods in class.  
@@ -7,17 +7,17 @@ The methods are:
 a. loadgraph - get matrix and update the members according the matrix.
 b. edges - count the edges in graph.
 c. isSymmetric - check if the matrix is symmetric.
-d. printgraph - display the graph(print the count of vertices, of edges and if direct\undirect)
-e. printMat - print the adjency matrix of the graph
+d. printgraphDescription - print presentation of the graph(print the count of vertices, of edges and if direct\undirect)
+e. printGraph return string of the graph's adjacency matrix.
 
 Algorithms: algorithms include 2 files:
 1. Algorithms.hpp - define the namespace "Algorithms" which include const varriables, and statements of methods.
 2. Algorithms.cpp - include the implements of all methods in namespace "Algorithms":
-a.1 isConnected - get graph and return if it's connected strong or not.
+a.1 isConnected - get graph and return if it's strong connected or not.
     The function use BFS(a.2) algorithms on the graph and check if all the vertices painted.
     If the graph is direct - perform BFS on all vertices. if undirect - on one vertex.
 
-b.1 shortestPath - the function get graph, source vertex and destination vertex and return string of
+b.1 shortestPath - the function get graph, source vertex and destination vertex and return string of the
     shortest path between them if exist or "-1" if does not exist path.
     The function throw exception if the graph contains negative cycle. 
     The function use Bellman-Ford algorithms(b.2)- becuase negative weights are possible- which perform relax(b.3) on all edges in graph n-1 times and save the path(in vector) each time. 
@@ -37,4 +37,4 @@ e.1 negativeCycle - The function get graph and check if exist negative function 
     The function call function isNegativeCircle(e.2) which use "Bellman-Ford" algorithms and do relax n-1 times on the graph.
     After that the function do another relax to check if one of the edge was change.
     If changed, the function use the vertex of the edge and use vector "path" from the bellman-ford algorithm and print the circle.
-    If did not change print nessege and return false.
+    If did not change print messegge and return false.
