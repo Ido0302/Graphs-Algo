@@ -442,8 +442,8 @@ TEST_CASE("Another arithmetic operation on graphs"){
     g1*= -1;
     -g2;
     CHECK(g1.printGraph()==g2.printGraph());
-    
 }
+
 
 TEST_CASE("Test compare operation on graphs"){
     bool result1, result2, result3;
@@ -509,7 +509,36 @@ TEST_CASE("Test compare operation on graphs"){
     CHECK(result2==false);
     CHECK(result3==false);
 
+}
 
+TEST_CASE("Operators&Algorithms"){
+    ariel::Graph g;
+    vector<vector<int>> graph = {
+        {0, -1, 0},
+        {0, 0, -2},
+        {4, 0, 0}};
+    g.loadGraph(graph);
+    CHECK(negativeCycle(g) == false);
+    -g;
+    CHECK(negativeCycle(g) == true); 
+
+    ariel::Graph g1;
+    vector<vector<int>> graph1 = {
+        {0, 1, 0},
+        {1, 0, 0},
+        {0, 0, 0}};
+    g1.loadGraph(graph1);
+    CHECK(isConnected(g1)==false);
+
+    ariel::Graph g2;
+    vector<vector<int>> graph2 = {
+        {0, 0, 0},
+        {0, 0, 1},
+        {0, 1, 0}};
+    g2.loadGraph(graph2);   
+
+    g1+=g2;
+    CHECK(isConnected(g1)==true);
 }
 
 
